@@ -34,14 +34,14 @@ def dropout_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
 if __name__ == "__main__":
     dropout_values = [0.1, 0.3, 0.5, 0.6]
     fig, axs = plt.subplots(len(dropout_values), 1, figsize=(30, 5*len(dropout_values)), sharey=True)
-    x, y = sample_generators.generate_osband_sin_samples()
+    x, y = generate_osband_sin_samples()
     for dropout, ax in zip(dropout_values, axs):
         ax.set_title("%.3f Dropout" % dropout)
         dropout_evaluation(x, y, dropout, 1e-3, 20000, 100, ax)
         fig.savefig("Dropout_Sinus.pdf")
 
     fig, axs = plt.subplots(len(dropout_values), 1, figsize=(30, 5*len(dropout_values)), sharey=True)
-    x, y = sample_generators.generate_osband_nonlinear_samples()
+    x, y = generate_osband_nonlinear_samples()
     for dropout, ax in zip(dropout_values, axs):
         ax.set_title("%.3f Dropout" % dropout)
         dropout_evaluation(x, y, dropout, 1e-3, 20000, 100, ax)
