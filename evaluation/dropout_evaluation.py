@@ -1,5 +1,6 @@
 import sys
-sys.path.append("D:/GUC/Semester 8/TUM/MCDO/UncertaintyNN/")
+#sys.path.append("D:/GUC/Semester 8/TUM/MCDO/UncertaintyNN/")
+sys.path.append("./")
 print(sys.path)
 from matplotlib.backends.backend_pdf import PdfPages
 from data.sample_generators import generate_linear_samples,generate_osband_sin_samples,generate_osband_nonlinear_samples
