@@ -1,5 +1,8 @@
+import sys
+sys.path.append("D:/GUC/Semester 8/TUM/MCDO/UncertaintyNN/")
+print(sys.path)
 from matplotlib.backends.backend_pdf import PdfPages
-from evaluation.data import sample_generators
+from data.sample_generators import generate_linear_samples,generate_osband_sin_samples,generate_osband_nonlinear_samples
 
 import numpy as np
 import plotting
