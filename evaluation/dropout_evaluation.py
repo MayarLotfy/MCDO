@@ -1,5 +1,5 @@
 from matplotlib.backends.backend_pdf import PdfPages
-from data import sample_generators
+from evaluation.data import sample_generators
 
 import numpy as np
 import plotting
