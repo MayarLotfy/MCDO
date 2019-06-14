@@ -1,6 +1,11 @@
 from matplotlib.backends.backend_pdf import PdfPages
 
-from data import sample_generators
+import sys
+sys.path.append("./")
+
+from data.sample_generators import generate_linear_samples,generate_osband_sin_samples,generate_osband_nonlinear_samples
+from data.data_loader import get_mnsit_data
+
 
 import tensorflow as tf
 import numpy as np
@@ -10,10 +15,11 @@ import matplotlib.pyplot as plt
 from training.combined_training import combined_training
 
 
-def combined_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
+
+def combined_evaluation(x_train, y_train,x_test,y_test, dropout, learning_rate, epochs, n_passes, ax):
     """
 
-    :param x:
+    :param x:`
     :param y:
     :param dropout:
     :param learning_rate:
@@ -22,7 +28,7 @@ def combined_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
     :return:
     """
     sess, x_placeholder, dropout_placeholder = \
-        combined_training(x, y, 0.2, learning_rate, epochs)
+        combined_training(x_train, y_train, 0.2, learning_rate, epochs)
 
     prediction_op = sess.graph.get_collection("prediction")
     log_variance = sess.graph.get_collection("log_variance")
@@ -31,7 +37,7 @@ def combined_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
     additional_range = 0.1 * np.max(x)
     x_eval = np.linspace(np.min(x) - additional_range, np.max(x) + additional_range, 100).reshape([-1, 1])
 
-    feed_dict = {x_placeholder: x_eval,
+    feed_dict = {x_placeholder: x_train,
                  dropout_placeholder: dropout}
 
     predictions = []
@@ -46,7 +52,7 @@ def combined_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
     aleatoric_eval = np.mean(aleatorics, axis=0).flatten()
     total_uncertainty_eval = epistemic_eval + aleatoric_eval
 
-    plotting.plot_mean_vs_truth_with_uncertainties(x, y, x_eval, y_eval, aleatoric_eval, epistemic_eval, ax)
+    plotting.plot_mean_vs_truth_with_uncertainties(x_train, y_train, x_test, y_test, aleatoric_eval, epistemic_eval, ax)
 
     fig.suptitle("Dropout - Learning Rate %f, Epochs %d, Dropout %.3f, Passes %d" %
                  (learning_rate, epochs, dropout, n_passes))
@@ -58,19 +64,16 @@ def combined_evaluation(x, y, dropout, learning_rate, epochs, n_passes, ax):
 
 if __name__ == "__main__":
     dropout_values = [0.1, 0.2, 0.3, 0.5]
+
     fig, axs = plt.subplots(len(dropout_values), 1, figsize=(30, 5*len(dropout_values)), sharey=True)
     axs[0].set_ylim([-1, 3])
     fig.suptitle('Combined-Model | Epochs: 15000, Learning Rate: 1e-3', fontsize=20)
-    x, y = sample_generators.generate_osband_sin_samples(60)
-    for dropout, ax in zip(dropout_values, axs):
-        ax.set_title("%.3f Dropout" % dropout)
-        combined_evaluation(x, y, dropout, 1e-3, 20000, 500, ax)
-        fig.savefig("Combined_Sinus.pdf")
+    #x, y = generate_osband_sin_samples(60)
+    x_train, y_train, x_test,y_test = get_mnsit_data(60)
 
-    fig, axs = plt.subplots(len(dropout_values), 1, figsize=(30, 5*len(dropout_values)), sharey=True)
-    fig.suptitle('Combined-Model | Epochs: 15000, Learning Rate: 1e-3', fontsize=20)
-    x, y = sample_generators.generate_osband_nonlinear_samples()
     for dropout, ax in zip(dropout_values, axs):
         ax.set_title("%.3f Dropout" % dropout)
-        combined_evaluation(x, y, dropout, 1e-3, 20000, 500, ax)
-        fig.savefig("Combined_Nonlinear.pdf")
+        combined_evaluation(x_train, y_train,x_test,y_test, dropout, 1e-3, 20000, 500, ax)
+        fig.savefig("mnist.pdf")
+
+    

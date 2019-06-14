@@ -1,6 +1,11 @@
 from matplotlib.backends.backend_pdf import PdfPages
 
-from data import sample_generators
+import sys
+sys.path.append("./")
+
+from data.sample_generators import generate_linear_samples,generate_osband_sin_samples,generate_osband_nonlinear_samples
+
+
 
 import matplotlib.pyplot as plt
 

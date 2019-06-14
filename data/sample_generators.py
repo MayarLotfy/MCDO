@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 
+
 def generate_osband_sin_samples(size=30, variance_1=0.03, variance_2=0.03):
     """
     Generate samples from the function in the Osband paper.

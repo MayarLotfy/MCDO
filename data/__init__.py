@@ -1,1 +1,2 @@
 from data.sample_generators import generate_osband_sin_samples, generate_osband_nonlinear_samples
+from data.data_loader import get_mnsit_data
