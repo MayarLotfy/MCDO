@@ -34,8 +34,8 @@ def combined_evaluation(x_train, y_train,x_test,y_test, dropout, learning_rate, 
     log_variance = sess.graph.get_collection("log_variance")
     aleatoric_op = tf.exp(log_variance)
 
-    additional_range = 0.1 * np.max(x)
-    x_eval = np.linspace(np.min(x) - additional_range, np.max(x) + additional_range, 100).reshape([-1, 1])
+    additional_range = 0.1 * np.max(x_train)
+    x_eval = np.linspace(np.min(x_train) - additional_range, np.max(x_train) + additional_range, 100).reshape([-1, 1])
 
     feed_dict = {x_placeholder: x_train,
                  dropout_placeholder: dropout}
